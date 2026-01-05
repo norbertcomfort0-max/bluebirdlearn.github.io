@@ -1,0 +1,10 @@
+{
+  "name": "bluebirdlearn",
+  "version": "1.0.0",
+  "description": "BluebirdLearn — offline-first UNEB learning hub",
+  "scripts": {
+    "start": "serve .",
+    "zip": "./build-zip.sh"
+  },
+  "license": "MIT"
+}

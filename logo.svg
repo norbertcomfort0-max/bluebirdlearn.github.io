@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-labelledby="title">
+  <title id="title">BluebirdLearn</title>
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#1070ff"/>
+      <stop offset="1" stop-color="#67aaff"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="20" fill="url(#g)"/>
+  <g transform="translate(18,22)" fill="#fff" stroke="none">
+    <path d="M22 6c-6 0-11 4-13 9 0 0-5 1-7 4 4-1 8 1 10 3 3 3 6 5 12 5 6 0 12-5 14-9 2-4 0-9-3-12-3-3-6-5-13-4z" opacity="0.98"/>
+    <g transform="translate(52,50)">
+      <text x="0" y="0" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="28" fill="#fff">BB</text>
+    </g>
+  </g>
+</svg>

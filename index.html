@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BluebirdLearn — Local-first UNEB S1–S4</title>
+  <meta name="description" content="BluebirdLearn — offline-first UNEB content, local-only storage." />
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="logo.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <a href="#" class="brand" id="homeBtn" aria-label="BluebirdLearn home">
+        <img src="logo.svg" alt="BluebirdLearn logo" class="logo" width="44" height="44">
+        <span class="brand-text">BluebirdLearn</span>
+      </a>
+
+      <nav class="main-nav" role="navigation" aria-label="Main">
+        <button class="nav-btn" data-view="home">Home</button>
+        <button class="nav-btn" data-view="subjects">Subjects</button>
+        <button class="nav-btn" data-view="lesson" id="navLessonBtn" style="display:none">Lesson</button>
+        <button class="nav-btn" data-view="flashcards">Flashcards</button>
+        <button class="nav-btn" data-view="exams">Exams</button>
+        <button class="nav-btn" data-view="analytics">Analytics</button>
+        <button class="nav-btn" data-view="dashboard">Dashboard</button>
+        <button class="nav-btn" data-view="study">Study Plans</button>
+        <button class="nav-btn" data-view="manage">Content</button>
+      </nav>
+
+      <div class="top-actions">
+        <button id="searchBtn" class="icon-btn" title="Search (/)">🔍</button>
+        <button id="settingsBtn" class="icon-btn" title="Settings" aria-haspopup="dialog" aria-controls="settingsModal">⚙️</button>
+        <button id="themeToggleHeader" class="icon-btn" title="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app" role="main">
+    <!-- Home -->
+    <section id="view-home" class="view active" aria-labelledby="homeTitle">
+      <div class="container">
+        <h1 id="homeTitle">Learn Smarter for UNEB — Local-first</h1>
+        <p class="muted">Offline-first lessons and quizzes for S1–S4. All data remains on your device unless you export it.</p>
+
+        <div class="grid">
+          <div class="card">
+            <h2>Get started</h2>
+            <div class="stack">
+              <button class="btn" id="startLearning">Browse subjects</button>
+              <button class="btn" id="openDashboard">Open dashboard</button>
+              <button class="btn" id="openManage">Content Manager</button>
+            </div>
+          </div>
+
+          <aside class="card small">
+            <h3>Your profile</h3>
+            <div id="profileSummary" class="profile-summary"></div>
+            <div style="margin-top:8px">
+              <button class="btn" id="editProfileBtn">Edit profile & privacy</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Subjects -->
+    <section id="view-subjects" class="view hidden" aria-labelledby="subjectsTitle">
+      <div class="container">
+        <h1 id="subjectsTitle">Subjects</h1>
+        <p class="muted">Find lessons, quizzes and downloadable subject packages.</p>
+
+        <div id="subjectGrid" class="subject-grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Lesson viewer -->
+    <section id="view-lesson" class="view hidden" aria-labelledby="lessonTitle">
+      <div class="container">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h1 id="lessonTitle">Lesson</h1>
+          <div>
+            <button class="btn" id="bookmarkBtn">🔖 Bookmark</button>
+            <button class="btn" id="downloadLessonBtn">Download</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <div style="display:flex;gap:12px">
+            <nav class="topic-list" id="lessonTopics" aria-label="Topics" style="min-width:240px">
+              <h4 class="small-muted">Topics</h4>
+              <div id="lessonTopicList"></div>
+            </nav>
+
+            <article style="flex:1">
+              <div id="lessonContent" tabindex="0"></div>
+
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn" id="createFlashcardFromSelection">Create flashcard from selection</button>
+                <button class="btn" id="createExamQFromSelection">Create exam question from selection</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flashcards -->
+    <section id="view-flashcards" class="view hidden" aria-labelledby="flashcardsTitle">
+      <div class="container">
+        <h1 id="flashcardsTitle">Flashcards — Study & Manage</h1>
+        <div class="card" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">
+          <div style="flex:1;min-width:320px">
+            <h3>Create flashcard</h3>
+            <label>Subject
+              <select id="fcSubject" style="width:100%;margin-top:6px"></select>
+            </label>
+            <label style="margin-top:8px">Topic
+              <select id="fcTopic" style="width:100%;margin-top:6px"></select>
+            </label>
+            <label style="margin-top:8px">Front (question)
+              <input id="fcFront" style="width:100%;margin-top:6px" placeholder="Front text">
+            </label>
+            <label style="margin-top:8px">Back (answer)
+              <input id="fcBack" style="width:100%;margin-top:6px" placeholder="Back text">
+            </label>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" id="addFlashcardBtn">Add flashcard</button>
+              <button class="btn" id="exportFlashcardsBtn">Export flashcards</button>
+              <label class="btn">Import<input id="importFlashcards" type="file" accept="application/json" style="display:none"></label>
+            </div>
+          </div>
+
+          <div style="width:420px">
+            <h3>Study</h3>
+            <div class="muted">Review due cards or all cards.</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" id="studyDueBtn">Study due</button>
+              <button class="btn" id="studyAllBtn">Study all</button>
+              <button class="btn" id="studyTodayBtn">Today's due</button>
+            </div>
+
+            <div id="studyArea" style="margin-top:12px"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" id="flashcardsListArea"></div>
+      </div>
+    </section>
+
+    <!-- Exams -->
+    <section id="view-exams" class="view hidden" aria-labelledby="examsTitle">
+      <div class="container">
+        <h1 id="examsTitle">Exams — Create & Run</h1>
+
+        <div class="card" style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+          <div style="flex:1;min-width:360px">
+            <h3>Create exam</h3>
+            <label>Exam title
+              <input id="examTitle" placeholder="Mid-term mock" style="width:100%;margin-top:6px">
+            </label>
+            <label style="margin-top:8px">Duration (minutes)
+              <input id="examDuration" type="number" min="1" value="30" style="width:120px;margin-top:6px">
+            </label>
+            <div style="margin-top:8px" class="muted">Add multiple-choice questions below.</div>
+
+            <div id="examBuilder" style="margin-top:8px"></div>
+
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" id="addExamQuestion">Add question</button>
+              <button class="btn" id="saveExamBtn">Save exam</button>
+              <button class="btn" id="exportExamsBtn">Export exams</button>
+            </div>
+          </div>
+
+          <div style="width:420px">
+            <h3>Available exams</h3>
+            <div id="examsListArea"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Analytics -->
+    <section id="view-analytics" class="view hidden" aria-labelledby="analyticsTitle">
+      <div class="container">
+        <h1 id="analyticsTitle">Analytics — Local insights</h1>
+        <div id="analyticsArea" class="card"></div>
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="view-dashboard" class="view hidden" aria-labelledby="dashTitle">
+      <div class="container">
+        <h1 id="dashTitle">Dashboard</h1>
+        <div id="dashboardContent" class="card"></div>
+      </div>
+    </section>
+
+    <!-- Study Plans -->
+    <section id="view-study" class="view hidden" aria-labelledby="studyTitle">
+      <div class="container">
+        <h1 id="studyTitle">Study Plans</h1>
+        <div class="card">
+          <p class="muted">Generate a 7-day plan or view saved plans.</p>
+          <div class="stack">
+            <button class="btn" id="genPlanBtn">Generate 7-day plan</button>
+            <button class="btn" id="clearPlanBtn">Clear plan</button>
+            <div id="planArea" class="muted">No plan yet.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content Manager -->
+    <section id="view-manage" class="view hidden" aria-labelledby="manageTitle">
+      <div class="container">
+        <h1 id="manageTitle">Content Manager</h1>
+
+        <div class="card" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+          <div>
+            <p class="muted">Add custom topics locally. Teachers can attach media and export subject packages.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn" id="openAddTopic">Add topic</button>
+              <button class="btn" id="openTeacherTopics">My topics</button>
+              <button class="btn" id="openMediaRecorder">Media recorder</button>
+            </div>
+          </div>
+          <div class="muted">Note: large media saved locally using IndexedDB.</div>
+        </div>
+
+        <div id="teacherTopicsListContainer" style="margin-top:12px"></div>
+
+        <div style="margin-top:12px" class="card">
+          <h3>Export / Import subject packages</h3>
+          <div class="muted">Export a subject package (.tar) including media blobs, or import packages (.tar or .json)</div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <select id="exportSubjectSelect"></select>
+            <button class="btn" id="exportSubjectBtn">Export subject package (.tar)</button>
+            <label class="btn">Import package<input id="importPackageFile" type="file" accept=".json,.tar" style="display:none"></label>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    BluebirdLearn — Local-first • Built for UNEB S1–S4 — All data stays on your device
+  </footer>
+
+  <!-- Settings modal -->
+  <div id="settingsModal" role="dialog" aria-modal="true" class="modal hidden" aria-hidden="true" aria-labelledby="settingsTitle">
+    <div class="modal-panel">
+      <header class="modal-header">
+        <h2 id="settingsTitle">Settings & Profile</h2>
+        <button id="closeSettings" class="icon-btn" aria-label="Close settings">✖</button>
+      </header>
+
+      <div class="modal-body">
+        <section class="card">
+          <h3>Profile</h3>
+          <form id="profileForm">
+            <div class="row">
+              <div class="avatar-wrap">
+                <img id="avatarPreview" src="logo.svg" alt="Avatar preview" class="avatar">
+                <label class="btn small" for="avatarInput">Upload avatar</label>
+                <input id="avatarInput" type="file" accept="image/*" class="hidden-input">
+              </div>
+              <div class="form-fields">
+                <label>Display name
+                  <input id="profileName" type="text" placeholder="Your name">
+                </label>
+                <label>Role
+                  <select id="profileRole">
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="learner">Learner</option>
+                  </select>
+                </label>
+                <label>Class (if student)
+                  <select id="profileClass">
+                    <option value="">—</option>
+                    <option>S1</option>
+                    <option>S2</option>
+                    <option>S3</option>
+                    <option>S4</option>
+                  </select>
+                </label>
+                <label>Favorites (comma-separated)
+                  <input id="profileFavs" placeholder="Mathematics, Biology">
+                </label>
+                <div style="margin-top:8px">
+                  <button class="btn" id="saveProfile">Save profile</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <section class="card">
+          <h3>Appearance & Accessibility</h3>
+          <div class="stack">
+            <label>Theme
+              <select id="themeSelect">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="auto">Auto (system)</option>
+              </select>
+            </label>
+
+            <label>Font size
+              <input id="fontSize" type="range" min="12" max="22" value="16">
+            </label>
+
+            <label><input id="textOnly" type="checkbox"> Text-only (low bandwidth)</label>
+            <label><input id="reduceMotion" type="checkbox"> Reduce animations / effects</label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Data & Privacy</h3>
+          <div class="muted">
+            BluebirdLearn stores data locally on this device only. Nothing is sent to servers unless you explicitly export and share it.
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" id="exportData">Export all data</button>
+            <label class="btn">
+              Import data
+              <input id="importData" type="file" accept="application/json" class="hidden-input">
+            </label>
+            <button class="btn danger" id="clearData">Clear local data</button>
+          </div>
+        </section>
+      </div>
+
+      <footer class="modal-footer">
+        <div class="muted">BluebirdLearn — Local-first • No tracking</div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Media recorder modal -->
+  <div id="mediaRecorderModal" class="modal hidden" aria-hidden="true" role="dialog" aria-labelledby="mediaRecorderTitle">
+    <div class="modal-panel">
+      <header class="modal-header">
+        <h2 id="mediaRecorderTitle">Media recorder</h2>
+        <button id="closeMediaRecorder" class="icon-btn">✖</button>
+      </header>
+      <div class="modal-body">
+        <section class="card">
+          <label>Type
+            <select id="recType">
+              <option value="audio">Audio</option>
+              <option value="video">Video</option>
+            </select>
+          </label>
+
+          <label style="margin-top:8px">Subject
+            <select id="recSubject" style="width:100%;margin-top:6px"></select>
+          </label>
+
+          <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+            <button class="btn" id="startRec">Start</button>
+            <button class="btn" id="stopRec" disabled>Stop</button>
+            <div id="recStatus" class="muted">Idle</div>
+          </div>
+
+          <div id="recPreviewArea" style="margin-top:12px"></div>
+
+          <label style="margin-top:8px">Save as (title)
+            <input id="recTitle" placeholder="Lesson audio or topic title" style="width:100%;margin-top:6px">
+          </label>
+
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" id="saveRecBtn" disabled>Save recording</button>
+            <button class="btn" id="discardRecBtn" disabled>Discard</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exam runner modal -->
+  <div id="examRunnerModal" class="modal hidden" aria-hidden="true" role="dialog" aria-labelledby="examRunnerTitle">
+    <div class="modal-panel">
+      <header class="modal-header">
+        <h2 id="examRunnerTitle">Exam</h2>
+        <button id="closeExamRunner" class="icon-btn">✖</button>
+      </header>
+      <div class="modal-body">
+        <div id="examRunnerArea"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
