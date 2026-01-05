@@ -1,81 +1,139 @@
-/* Final combined stylesheet (responsive, accessible, low-motion and text-only modes supported) */
-/* ...complete stylesheet as provided earlier (keeps layout, modals, flashcards, analytics, lesson viewer styles)... */
-
+/* BluebirdLearn responsive stylesheet — mobile-first */
 :root{
-  --bg:#f6f9ff; --surface:#ffffff; --muted:#5b6b80; --text:#052039;
-  --primary:#1070ff; --radius:12px; --fs:16px;
+  --bg: #ffffff;
+  --surface: #f8fafc;
+  --muted: #6b7280;
+  --text: #0f172a;
+  --accent: #0ea5a4; /* teal */
+  --danger: #ef4444;
+  --card-radius: 10px;
+  --shadow: 0 6px 18px rgba(15,23,42,0.06);
+  --fs: 16px; /* overridden by JS */
 }
-@media (prefers-color-scheme: dark){
-  :root{ --bg:#071026; --surface:#07192a; --muted:#9ab0cc; --text:#e6f0ff; --primary:#66a6ff; }
+
+[data-theme="dark"]{
+  --bg: #0b1220;
+  --surface: #071026;
+  --muted: #9aa4b2;
+  --text: #e6eef6;
+  --accent: #34d399;
 }
+
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;background:linear-gradient(180deg,var(--bg),#ffffff00 60%);color:var(--text);font-size:var(--fs);-webkit-font-smoothing:antialiased}
-.topbar{background:linear-gradient(90deg,#ffffffcc,#f0f8ffcc);border-bottom:1px solid #e6eef8;position:sticky;top:0;z-index:20}
-.topbar-inner{max-width:1100px;margin:0 auto;padding:8px 12px;display:flex;align-items:center;gap:12px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
-.logo{width:44px;height:44;border-radius:8px}
-.brand-text{font-weight:800;font-size:1.05rem}
-.main-nav{margin-left:12px;display:flex;gap:6px;align-items:center}
-.nav-btn{background:transparent;border:0;padding:8px 10px;border-radius:8px;cursor:pointer}
-.nav-btn:hover{background:rgba(16,112,255,0.06)}
-.nav-btn.active{background:rgba(16,112,255,0.08);border-left:3px solid var(--primary);padding-left:6px}
-.top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-size:var(--fs);
+  background:linear-gradient(180deg,var(--bg),var(--surface));
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+}
+
+.container{max-width:1100px;margin:0 auto;padding:20px}
+
+/* Topbar */
+.topbar{background:var(--surface);border-bottom:1px solid rgba(15,23,42,0.04);position:sticky;top:0;z-index:40}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;padding:10px 20px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.logo{border-radius:8px}
+.brand-text{font-weight:700}
+
+.main-nav{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.nav-btn{background:transparent;border:0;padding:8px 12px;border-radius:8px;color:var(--text);cursor:pointer}
+.nav-btn:hover{background:rgba(10,10,10,0.04)}
+.nav-btn.active{background:linear-gradient(90deg, rgba(14,165,164,0.12), rgba(14,165,164,0.06));box-shadow:inset 0 0 0 1px rgba(14,165,164,0.06)}
+
+.top-actions{display:flex;align-items:center;gap:8px}
 .icon-btn{background:transparent;border:0;padding:8px;border-radius:8px;cursor:pointer}
+.icon-btn:hover{background:rgba(10,10,10,0.03)}
 
-#app{max-width:1100px;margin:20px auto;padding:0 12px}
-.container{max-width:1100px;margin:0 auto}
-.grid{display:flex;gap:16px;align-items:start}
-.card{background:var(--surface);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(10,24,42,0.04)}
+/* Views */
+.view{display:block;padding:18px 0}
+.view.hidden{display:none}
+
+.grid{display:grid;grid-template-columns:1fr 340px;gap:16px}
+@media (max-width:880px){
+  .grid{grid-template-columns:1fr;}
+  .topbar-inner{padding:10px}
+  .main-nav{overflow:auto;padding-bottom:6px}
+}
+
+.card{background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--shadow);padding:14px}
 .card.small{padding:10px}
-.stack{display:flex;flex-direction:column;gap:8px}
-.btn{background:#fff;border:1px solid #e6eef8;padding:9px 12px;border-radius:10px;font-weight:700;cursor:pointer}
-.btn.small{padding:6px 8px;font-size:.9rem}
-.btn.danger{background:#fff;border-color:#f5d0d0;color:#8a1d1d}
-.muted{color:var(--muted)}
-.subject-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
-@media (max-width:920px){ .subject-grid{grid-template-columns:repeat(2,1fr)} .grid{flex-direction:column} .main-nav{display:none} }
-@media (max-width:560px){ .subject-grid{grid-template-columns:1fr} .topbar-inner{padding:8px} }
 
-.subject-card{padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fafcff);cursor:pointer;border:1px solid #eef6ff;display:flex;flex-direction:column;gap:8px}
-.profile-summary{display:flex;gap:8px;align-items:center}
-.avatar{width:56px;height:56;border-radius:10px;object-fit:cover}
-.avatar-wrap{text-align:center}
-.row{display:flex;gap:12px;align-items:flex-start}
-.form-fields{flex:1;display:flex;flex-direction:column;gap:8px}
-.hidden-input{display:none}
+/* Subject cards */
+.subject-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:1100px){.subject-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.subject-grid{grid-template-columns:1fr}}
+.subject-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:14px;border-radius:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.subject-card:focus{outline:2px solid rgba(14,165,164,0.18)}
 
-/* modal */
-.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,0.35)}
-.modal.hidden{display:none}
-.modal-panel{width:100%;max-width:920px;border-radius:12px;overflow:hidden}
-.modal-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:linear-gradient(90deg,#fff,#f8fbff);border-bottom:1px solid #eef6ff}
-.modal-body{padding:16px;display:grid;gap:12px;background:var(--surface)}
-.modal-footer{padding:12px 16px;background:linear-gradient(90deg,#fff,#f8fbff);border-top:1px solid #eef6ff;text-align:right;color:var(--muted)}
+/* Topic list and lesson */
+.topic-list{background:transparent;padding:8px;border-right:1px solid rgba(15,23,42,0.03)}
+.topic-item{padding:8px;border-radius:6px;cursor:pointer}
+.topic-item.active{background:linear-gradient(90deg, rgba(14,165,164,0.06), rgba(14,165,164,0.02));font-weight:600}
 
-/* accessibility focus */
-button:focus, input:focus, select:focus { outline: 3px solid rgba(16,112,255,0.18); outline-offset:2px; }
-
-/* reduce motion */
-.reduce-motion * { transition: none !important; animation: none !important; }
-
-/* simple footer */
-.footer{max-width:1100px;margin:24px auto;padding:12px;color:var(--muted);font-size:.95rem}
+article{min-height:240px}
+#lessonContent{padding:8px}
 
 /* Flashcards */
-.flashcard-card{border-radius:12px;padding:18px;background:linear-gradient(180deg,#fff,#f8fbff);box-shadow:0 6px 18px rgba(10,24,42,0.04);min-height:140px;display:flex;flex-direction:column;justify-content:center;align-items:center}
-.flashcard-front{font-size:1.1rem;font-weight:700}
-.flashcard-back{font-size:1rem;margin-top:8px}
-.flashcard-controls{display:flex;gap:8px;margin-top:12px}
-.flashcard-list-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #eef6ff}
-.small-muted{color:var(--muted);font-size:.95rem}
+.flashcard-card{background:#fff;border-radius:8px;padding:12px;border:1px solid rgba(15,23,42,0.04)}
+.flashcard-front{font-size:1.05rem;font-weight:600}
+.flashcard-back{margin-top:8px}
+.flashcard-back.hidden{display:none}
+.flashcard-controls{display:flex;gap:8px;margin-top:8px}
+.btn{background:var(--accent);border:0;color:white;padding:8px 12px;border-radius:8px;cursor:pointer}
+.btn:hover{opacity:0.95}
+.btn.small{padding:6px 8px;font-size:0.9rem}
+.btn.danger{background:var(--danger)}
 
-/* Analytics & exams */
-.analytics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.analytics-card{padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid #eef6ff}
-.exam-q{padding:10px;border-radius:8px;border:1px solid #eef6ff;margin-bottom:8px}
-.export-link{color:var(--primary);text-decoration:underline;cursor:pointer}
+/* Forms */
+input[type="text"], input[type="number"], select, textarea{padding:8px;border-radius:6px;border:1px solid rgba(15,23,42,0.06);width:100%;background:transparent;color:inherit}
+label{display:block}
+.stack{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;gap:12px}
+@media (max-width:640px){.row{flex-direction:column}}
 
-/* Lesson viewer */
-.topic-list{min-width:220px;background:linear-gradient(180deg,#fff,#fbfdff);padding:8px;border-radius:10px;max-height:60vh;overflow:auto}
-.topic-item{padding:10px;border-radius:8px;cursor:pointer}
-.topic-item.active{background:rgba(16,112,255,0.06);font-weight:700}
+/* Modals */
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.45);padding:20px}
+.modal.hidden{display:none}
+.modal-panel{max-width:900px;width:100%;border-radius:10px;background:var(--surface);padding:12px;box-shadow:var(--shadow)}
+.modal-header{display:flex;align-items:center;justify-content:space-between}
+.modal-body{margin-top:8px}
+.modal-footer{margin-top:12px;text-align:right}
+
+/* Teacher topics list */
+.teacher-topic{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px;border-radius:8px;border:1px solid rgba(15,23,42,0.03);margin-bottom:8px}
+.media-preview{max-width:180px}
+
+/* Exam runner */
+#examRunnerArea{min-height:160px}
+
+/* Footer */
+.footer{padding:12px;text-align:center;border-top:1px solid rgba(15,23,42,0.03);background:transparent}
+
+/* Utility */
+.muted{color:var(--muted)}
+.small-muted{font-size:0.9rem;color:var(--muted)}
+.hidden{display:none}
+.avatar{width:64px;height:64px;border-radius:8px}
+.profile-summary{display:flex;align-items:center;gap:8px}
+
+/* Accessibility / reduced motion */
+.reduce-motion *, .reduce-motion *:before, .reduce-motion *:after{animation:none!important;transition:none!important}
+
+/* text-only mode */
+.text-only img, .text-only video{display:none!important}
+
+/* small tweaks */
+.subject-card .muted{font-size:0.9rem;color:var(--muted)}
+
+/* responsiveness: ensure main-nav collapses neatly on tiny screens */
+@media (max-width:420px){
+  .brand-text{display:none}
+  .top-actions .icon-btn{padding:6px}
+  .nav-btn{padding:6px 8px;font-size:0.95rem}
+}
