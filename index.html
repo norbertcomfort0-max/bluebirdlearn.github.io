@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>BluebirdLearn — Local-first UNEB S1–S4</title>
   <meta name="description" content="BluebirdLearn — offline-first UNEB content, local-only storage." />
+  <!-- If you host under a subpath (e.g. GitHub Pages repo site), set base to that path: -->
+  <!-- <base href="/bluebirdlearn.github.io/"> -->
+  <base href="/" />
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="logo.svg">
   <link rel="stylesheet" href="styles.css">
@@ -394,6 +397,10 @@
     </div>
   </div>
 
-  <script type="module" src="src/main.js"></script>
+  <noscript>
+    This app requires JavaScript. Please enable JavaScript in your browser.
+  </noscript>
+
+  <script type="module" src="./src/main.js"></script>
 </body>
 </html>
